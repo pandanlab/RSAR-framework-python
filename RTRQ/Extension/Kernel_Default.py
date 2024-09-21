@@ -52,5 +52,5 @@ class Kernel:
         data = getattr((Region),Node).list_callback()
         return data
 
-
+import RTRQ.Extension.DefineNode as macro
 kernel = Kernel()

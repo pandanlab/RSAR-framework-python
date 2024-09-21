@@ -1,13 +1,12 @@
-import RTRQ.Extension.DefineNode as Macro
 from RTRQ.kernel import *
 
-while 1:
-    data = input("user : ")
-    if("write" in data):
-        kernel.active_Node(Macro.Region_file,Macro.Node_file_handlewriteData,data.split()[1])
-    elif("read" in data):
-        kernel.active_Node(Macro.Region_file,Macro.Node_file_handlereadData,data)
-    elif("break" in data):
-        break
-    else:
-        print(data)
+def main():
+    while 1:
+        data = input("user : ")
+        if("example1" in data):
+            kernel.active_Node(macro.Region_Example1,macro.Node_Example1_handleExample,None)
+        if("example2" in data):
+            kernel.active_Node(macro.Region_Example2,macro.Node_Example2_handleExample,123)
+
+if __name__ == "__main__":
+    main()

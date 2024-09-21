@@ -16,19 +16,19 @@ def clear_directory(directory_path):
             os.remove(file_path)
 
 # clear Node
-link1 = os.path.join(os.path.dirname(__file__),"..","Node")
+link1 = os.path.join(os.path.dirname(__file__),"..","RTRQ","Node")
 clear_directory(link1)
 
 # generate Node
-link_macro = link1 = os.path.join(os.path.dirname(__file__),"..","Extension","DefineNode.py")
+link_macro = link1 = os.path.join(os.path.dirname(__file__),"..","RTRQ","Extension","DefineNode.py")
 with open(link_macro,"w") as file_macro:
-    link1 = os.path.join(os.path.dirname(__file__),"..","..","ServiceApp")
+    link1 = os.path.join(os.path.dirname(__file__),"..","ServiceApp")
     for data1 in os.listdir(link1):
         link2 = os.path.join(link1,data1)
         for data2 in os.listdir(link2):
             if("listNode" in data2):
                 # tao file Node
-                link_dirNode = os.path.join(os.path.dirname(__file__),"..","Node")
+                link_dirNode = os.path.join(os.path.dirname(__file__),"..","RTRQ","Node")
                 nameNode = f"Region_{data1.strip().split("_")[1]}.py"
                 link_Nodefile = os.path.join(link_dirNode,nameNode)
 
@@ -49,4 +49,10 @@ with open(link_macro,"w") as file_macro:
                 #print loading
                 print(f"Generated Node {data1}")
 
-
+# ghi lai kernel.py
+with open("RTRQ/kernel.py",'w') as fileKernel:
+    fileKernel.write("import sys\n")
+    fileKernel.write("sys.path.append('./')\n")
+    fileKernel.write("from RTRQ.Extension.Kernel_Default import *\n\n")
+    for data in os.listdir("ServiceApp"):
+        fileKernel.write(f"import ServiceApp.{data}.main\n")    
