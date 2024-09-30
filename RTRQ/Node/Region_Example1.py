@@ -1,7 +1,6 @@
 import sys
-sys.path.append('/')
+sys.path.append('./')
+from RTRQ.Extension.NodeDefault import obj_node
 
-import RTRQ.Extension.Node_Default as Node_Default
-
-Node_dataExample = Node_Default.NodeEvent()
-Node_handleExample = Node_Default.NodeEvent()
+Node_dataExample = obj_node()
+Node_handleExample = obj_node()

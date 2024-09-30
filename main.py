@@ -4,16 +4,12 @@ kernel_generate()
 import sys
 
 def main():
-    arguments = sys.argv
-    if(len(arguments)>1):
-        if(arguments[1]=="init"):
-            None
-        elif(arguments[1]=="boot"):
-            kernel.active_Node(Region_CLI,Node_CLI_handleMain)
-        elif(arguments[1]=="build"):
-            kernel.active_Node(Region_Build,Node_Build_handleBuild)
-    else:
-        print("Vui lòng thêm thông số (init;boot;build) sau pdm")
+    while 1:
+        data = input("user : ")
+        if("example1" in data):
+            kernel.active_Node(Region_Example1,Node_Example1_handleExample)
+        elif("example2" in data):
+            kernel.active_Node(Region_Example2,Node_Example2_handleExample,data)
 
 if __name__ == "__main__":
     main()

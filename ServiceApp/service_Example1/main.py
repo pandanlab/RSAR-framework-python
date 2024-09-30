@@ -1,8 +1,8 @@
 import sys
 sys.path.append('./')
-from RTRQ.Extension.Kernel_Default import *
+from RTRQ.Extension.KernelDefault import *
 
-def hello():
+def hello(data = None):
     print("example1")
 
-kernel.register_Method(macro.Region_Example1,macro.Node_Example1_handleExample,"default",lambda data: hello())
+kernel.register_Method(Region_Example1,Node_Example1_handleExample,hello)
