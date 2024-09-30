@@ -5,6 +5,11 @@ import subprocess
 import shutil
 import os
 
+try:
+    os.mkdir("DevTool/output")
+except:
+    print("exit")
+    
 shutil.copy("DevTool/store/main.spec","main.spec")
 subprocess.run("pyinstaller main.spec")
 shutil.rmtree("build")

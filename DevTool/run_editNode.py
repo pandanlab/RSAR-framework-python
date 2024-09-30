@@ -1,16 +1,19 @@
 import sys
 sys.path.append("./")
 
-from RTRQ.Extension.Kernel_Default import *
+from RTRQ.Extension.KernelDefault import *
 import tkinter as tk
 from tkinter import ttk
 from RTRQ.kernel import *
 
+kernel_generate()
+
 app = tk.Tk()
+app.title("Edit Node")
+app.geometry("300x250")
 
-
-value = kernel.getlist_Region()
-cb_Region = ttk.Combobox(app, values=value)
+lb_title = tk.Label(app,text="Edit Node GUI",font=13)
+cb_Region = ttk.Combobox(app, values=kernel.getListRegion())
 cb_Node = ttk.Combobox(app, values=[])
 en_setNode = tk.Entry(app,justify='center')
 bt_setNode = tk.Button(app,text="Set")
@@ -19,22 +22,19 @@ bt_getNode = tk.Button(app,text="Get")
 en_activeNode = tk.Entry(app,justify='center')
 bt_activeNode = tk.Button(app,text="Active")
 
-
+lb_title.pack(padx=10,pady=5)
 cb_Region.pack(padx=10,pady=2)
 cb_Node.pack(padx=10,pady=2)
-
 en_setNode.pack(padx=10,pady=2)
 bt_setNode.pack(padx=10,pady=2)
-
 en_getNode.pack(padx=10,pady=2)
 bt_getNode.pack(padx=10,pady=2)
-
 en_activeNode.pack(padx=10,pady=2)
 bt_activeNode.pack(padx=10,pady=2)
 
 def on_combobox_select(event):
-    list_node = cb_Region.get() 
-    cb_Node.configure(values=kernel.getlist_Node(list_node))
+    Region = cb_Region.get() 
+    cb_Node.configure(values=kernel.getListNode(Region))
 
 def onSet():
     Region  = cb_Region.get()

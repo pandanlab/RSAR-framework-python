@@ -2,57 +2,60 @@ import sys
 sys.path.append("./")
 
 import os
+import glob
 
-def clear_directory(directory_path):
-    # Kiểm tra xem thư mục có tồn tại không
-    if not os.path.isdir(directory_path):
-        raise ValueError(f"{directory_path} is not a valid directory")
-    # Lấy danh sách các file và thư mục trong thư mục
-    files = os.listdir(directory_path)
-    # Xóa từng file
-    for file_name in files:
-        file_path = os.path.join(directory_path, file_name)
-        if os.path.isfile(file_path):  # Kiểm tra xem có phải là file không
-            os.remove(file_path)
+#Clear Node
+files = glob.glob(os.path.join("RTRQ/Node", '*'))
+for file in files:
+    if (".py" in file):
+        os.remove(file)
 
-# clear Node
-link1 = os.path.join(os.path.dirname(__file__),"..","RTRQ","Node")
-clear_directory(link1)
+#generate node and Store
+list_store = []
 
-# generate Node
-link_macro = link1 = os.path.join(os.path.dirname(__file__),"..","RTRQ","Extension","DefineNode.py")
-with open(link_macro,"w") as file_macro:
-    link1 = os.path.join(os.path.dirname(__file__),"..","ServiceApp")
-    for data1 in os.listdir(link1):
-        link2 = os.path.join(link1,data1)
-        for data2 in os.listdir(link2):
-            if("listNode" in data2):
-                # tao file Node
-                link_dirNode = os.path.join(os.path.dirname(__file__),"..","RTRQ","Node")
-                nameNode = f"Region_{data1.strip().split("_")[1]}.py"
-                link_Nodefile = os.path.join(link_dirNode,nameNode)
+with open("RTRQ/Extension/.env",'r') as fileEnv:
+    for data in fileEnv:
+        if("Store" in data):
+            data = "system_" + data.replace("Store_","") 
+            list_store.append(data)
+link_ServiceApp = "ServiceApp"
 
-                # ghi macro region
-                file_macro.write(f"Region_{data1.strip().split("_")[1]} = 'Region_{data1.strip().split("_")[1]}'\n")
+with open("RTRQ/Extension/MacroDefault.py","w") as fileMacro:
+    for serviceName in os.listdir(link_ServiceApp):
+        print(serviceName)
+        link_service = os.path.join(link_ServiceApp,serviceName)
+        region_name = f"Region_{serviceName.replace("service_","")}"
+        fileMacro.write(f"{region_name} = '{region_name}'\n")
+        for filename in os.listdir(link_service):
+            # xu li listNode
+            if("listNode" in filename):
+                link_listNode = os.path.join(link_service,filename)
+                with open(link_listNode,"r") as fileListNode:
+                    with open(f"RTRQ/Node/Region_{serviceName.replace("service_","")}.py","w") as fileNode:
+                        # add header
+                        fileNode.write("import sys\n")
+                        fileNode.write("sys.path.append('./')\n")
+                        fileNode.write("from RTRQ.Extension.NodeDefault import obj_node\n\n")
+                        # add Node
+                        for line in fileListNode:
+                            if("Node" in line):
+                                line = line.strip()
+                                fileNode.write(f"{line} = obj_node()\n")
+                                fileMacro.write(f"Node_{serviceName.replace("service_","")}_{line.replace("Node_","")} = '{line}'\n")
+                            elif("Store" in line):
+                                data = f"{serviceName.replace('service_','')}_{line.replace('Store_','')}"
+                                list_store.append(data)
+        
+with open("RTRQ/Store/store.py","w") as fileStore:
+    for data in list_store:
+        fileStore.write(f"{data} = None\n")
 
-                # ghi noi dung node
-                with open(link_Nodefile,"w") as fileNode:
-                    fileNode.write(f"import sys\n")
-                    fileNode.write(f"sys.path.append('/')\n\n")
-                    fileNode.write(f"import RTRQ.Extension.Node_Default as Node_Default\n\n")
-                    link3 = os.path.join(link2,data2)
-                    with open(link3,"r") as file:
-                        for data in file:
-                            fileNode.write(f"{data.strip()} = Node_Default.NodeEvent()\n")
-                            file_macro.write(f"Node_{data1.strip().split("_")[1]}_{data.strip().split("_")[1]} = '{data.strip()}'\n")
-
-                #print loading
-                print(f"Generated Node {data1}")
-
-# ghi lai kernel.py
-with open("RTRQ/kernel.py",'w') as fileKernel:
+#generate kernelfile
+link_ServiceApp = "ServiceApp"
+with open("RTRQ/kernel.py","w") as fileKernel:
     fileKernel.write("import sys\n")
     fileKernel.write("sys.path.append('./')\n")
-    fileKernel.write("from RTRQ.Extension.Kernel_Default import *\n\n")
-    for data in os.listdir("ServiceApp"):
-        fileKernel.write(f"import ServiceApp.{data}.main\n")    
+    fileKernel.write("from RTRQ.Extension.KernelDefault import *\n\n")
+    fileKernel.write("def kernel_generate():\n")
+    for serviceName in os.listdir(link_ServiceApp):
+        fileKernel.write(f"\timport ServiceApp.{serviceName}.main\n")

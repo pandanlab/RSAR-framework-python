@@ -6,6 +6,7 @@ a = Analysis(
     binaries=[],
     datas=[
         ('RTRQ', 'RTRQ'),
+        ('ServiceApp', 'ServiceApp'),
     ],
     hiddenimports=[],
     hookspath=[],
